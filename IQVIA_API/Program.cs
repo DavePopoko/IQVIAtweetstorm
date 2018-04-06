@@ -76,7 +76,7 @@ namespace IQVIA_API
                 }
             }
             
-            WritetReportAsync(tweetblob);
+            WritetReportAsync(tweetblob).GetAwaiter().GetResult();
             Console.WriteLine($"Proccess Complete.  {tweetblob.Count} tweets pulled.");
         }
 
@@ -84,7 +84,7 @@ namespace IQVIA_API
         /// Serializes the TweetData into a Comma-seperated report.
         /// </summary>
         /// <param name="tweetblob">List of TwitterData objects to serialize</param>
-        private static async void WritetReportAsync(List<TweetData> tweetblob)
+        private static async Task<bool> WritetReportAsync(List<TweetData> tweetblob)
         {
             StreamWriter sw = new StreamWriter(ReportFile);
             foreach (var tt in tweetblob)
@@ -92,6 +92,7 @@ namespace IQVIA_API
                 await sw.WriteLineAsync($"{tt.Stamp},{tt.Id},{tt.Text.Replace("\n", " ")}");
             }
             sw.Close();
+            return true;
         }
 
         /// <summary>
